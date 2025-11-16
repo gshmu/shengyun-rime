@@ -80,7 +80,7 @@ preset_keyboards:
       - {click: Keyboard_shengyun_finals_q, label: "q", width: 12.5, send_bindings: false}
       - {click: Keyboard_shengyun_finals_x, label: "x", width: 12.5, send_bindings: false}
       - {click: Keyboard_shengyun_finals_r, label: "r", width: 12.5, send_bindings: false}
-      - {click: Keyboard_shengyun_finals_all, long_click: Keyboard_shengyun_finals_all, label: "⇧", width: 12.5, send_bindings: false, hilited: true}
+      - {click: Keyboard_shengyun_finals_zero, long_click: Keyboard_shengyun_finals, label: "⇧", width: 12.5, send_bindings: false, hilited: true}
 
       # 第四行：平舌音 + 翘舌音 + y w + 空格 + 删除 (z c s zh ch sh y w ␣ ⌫)
       - {click: Keyboard_shengyun_finals_z, label: "z", width: 10, send_bindings: false}
@@ -1245,7 +1245,7 @@ preset_keyboards:
       - {click: BackSpace, label: "⌫", width: 11.11, repeat: true}
 
   # 通用韵母层（显示所有35个韵母，西文模式专用，9列布局）
-  shengyun_finals_all:
+  shengyun_finals:
     name: 韵母层-全部
     author: shengyun
     ascii_mode: 0
@@ -1326,4 +1326,4 @@ preset_keys:
   Keyboard_shengyun_finals_s: {label: s, send: Eisu_toggle, select: shengyun_finals_s}
   Keyboard_shengyun_finals_y: {label: y, send: Eisu_toggle, select: shengyun_finals_y}
   Keyboard_shengyun_finals_w: {label: w, send: Eisu_toggle, select: shengyun_finals_w}
-  Keyboard_shengyun_finals_all: {label: " ", send: Eisu_toggle, select: shengyun_finals_all}
+  Keyboard_shengyun_finals_zero: {label: " ", send: Eisu_toggle, select: shengyun_finals_zero}
