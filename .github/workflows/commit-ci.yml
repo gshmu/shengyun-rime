@@ -51,20 +51,29 @@ jobs:
         id: jni-cache
         with:
           path: "app/prebuilt"
-          key: ${{ runner.os }}-trime-jni-debug-${{ steps.cache-hash.outputs.native-cache-hash }}
+          key: ${{ runner.os }}-trime-jni-release-${{ steps.cache-hash.outputs.native-cache-hash }}
 
       - name: Fetch submodules
         if: ${{ !steps.jni-cache.outputs.cache-hit }}
         run: |
           git submodule update --init --recursive
 
-      - name: Build debug Trime
+      - name: Setup Keystore
         run: |
-          ./gradlew :app:assembleDebug
+          cat << EOF > keystore.properties
+          keyBase64=${{ secrets.SIGNING_KEY }}
+          storePassword=${{ secrets.KEY_STORE_PASSWORD }}
+          keyAlias=${{ secrets.ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+      - name: Build release Trime
+        run: |
+          ./gradlew :app:assembleRelease
 
       - name: Add JNI cache
         if: ${{ !steps.jni-cache.outputs.cache-hit }}
-        run: cp -R app/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib app/prebuilt
+        run: cp -R app/build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib app/prebuilt
 
       - name: Get version info
         id: version
@@ -74,7 +83,7 @@ jobs:
 
       - name: Rename APK with clear filename
         run: |
-          cd app/build/outputs/apk/debug
+          cd app/build/outputs/apk/release
           original_apk=$(ls *arm64-v8a-*.apk | head -1)
           new_apk="shengyun-rime-arm64-v8a-${{ steps.version.outputs.date }}-${{ steps.version.outputs.commit_short }}.apk"
           mv "$original_apk" "$new_apk"
@@ -84,7 +93,7 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: shengyun-rime-arm64-v8a
-          path: app/build/outputs/apk/debug/shengyun-rime-arm64-v8a-*.apk
+          path: app/build/outputs/apk/release/shengyun-rime-arm64-v8a-*.apk
           retention-days: 90
 
       - name: Create automatic release
@@ -96,4 +105,4 @@ jobs:
           prerelease: false
           title: "Shengyun Rime ${{ steps.version.outputs.date }}"
           files: |
-            app/build/outputs/apk/debug/shengyun-rime-arm64-v8a-*.apk
+            app/build/outputs/apk/release/shengyun-rime-arm64-v8a-*.apk
