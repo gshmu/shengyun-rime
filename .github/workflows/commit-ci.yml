@@ -70,24 +70,34 @@ jobs:
         if: ${{ !steps.jni-cache.outputs.cache-hit }}
         run: cp -R app/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib app/prebuilt
 
+      - name: Get version info
+        id: version
+        run: |
+          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+          echo "commit_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Rename APK with clear filename
+        run: |
+          cd app/build/outputs/apk/debug
+          original_apk=$(ls *arm64-v8a-*.apk | head -1)
+          new_apk="shengyun-rime-arm64-v8a-${{ steps.version.outputs.date }}-${{ steps.version.outputs.commit_short }}.apk"
+          mv "$original_apk" "$new_apk"
+          echo "APK renamed to: $new_apk"
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v5
         with:
           name: shengyun-rime-arm64-v8a
-          path: app/build/outputs/apk/debug/*arm64-v8a-*.apk
+          path: app/build/outputs/apk/debug/shengyun-rime-arm64-v8a-*.apk
           retention-days: 90
-
-      - name: Get current date
-        id: date
-        run: echo "date=$(date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
 
       - name: Create automatic release
         if: github.ref == 'refs/heads/develop'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: "dev-${{ steps.date.outputs.date }}"
-          prerelease: true
-          title: "Development Build ${{ steps.date.outputs.date }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Shengyun Rime ${{ steps.version.outputs.date }}"
           files: |
-            app/build/outputs/apk/debug/*arm64-v8a-*.apk
+            app/build/outputs/apk/debug/shengyun-rime-arm64-v8a-*.apk
