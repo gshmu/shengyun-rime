@@ -1,9 +1,0 @@
-# SPDX-FileCopyrightText: 2025 Shengyun IME
-# SPDX-License-Identifier: GPL-3.0-or-later
-
-# 声韵拼音 - 开箱即用配置
-
-patch:
-  schema_list:
-    - schema: shengyun        # 声韵拼音输入方案（唯一默认方案）
-

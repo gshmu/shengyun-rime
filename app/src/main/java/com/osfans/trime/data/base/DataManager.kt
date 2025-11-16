@@ -111,9 +111,14 @@ object DataManager {
             }
         } else {
             // Force update if the file doesn't contain shengyun schema
-            val currentContent = custom.readText()
-            if (!currentContent.contains("schema: shengyun")) {
-                Timber.d("Updating default.custom.yaml to include shengyun schema")
+            runCatching {
+                val currentContent = custom.readText()
+                if (!currentContent.contains("schema: shengyun")) {
+                    Timber.d("Updating default.custom.yaml to include shengyun schema")
+                    custom.writeText(SCHEMA_LIST_CUSTOM_PATCH.trimIndent())
+                }
+            }.onFailure {
+                Timber.e(it, "Failed to update default.custom.yaml, recreating...")
                 custom.writeText(SCHEMA_LIST_CUSTOM_PATCH.trimIndent())
             }
         }
