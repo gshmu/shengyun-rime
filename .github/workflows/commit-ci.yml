@@ -7,18 +7,13 @@ on: [push]
 
 env:
   CI_NAME: Commit CI
+  BUILD_ABI: arm64-v8a
+
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-24.04
-          - macos-15
-          - windows-2025
-    env:
-      BUILD_ABI: arm64-v8a
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - name: Fetch source code
         uses: actions/checkout@v5
@@ -28,7 +23,6 @@ jobs:
 
       - name: Get branch name
         id: vars
-        shell: bash
         run: |
           echo ${GITHUB_REF#refs/*/}
           echo CI_BRANCH=${GITHUB_REF#refs/*/} >> $GITHUB_ENV
@@ -38,7 +32,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 17
-          # will restore cache of dependencies and wrappers
           cache: 'gradle'
 
       - name: Setup Android SDK
@@ -58,70 +51,38 @@ jobs:
         id: jni-cache
         with:
           path: "app/prebuilt"
-          key: ${{ matrix.os }}-trime-jni-debug-${{ steps.cache-hash.outputs.native-cache-hash }}
+          key: ${{ runner.os }}-trime-jni-debug-${{ steps.cache-hash.outputs.native-cache-hash }}
 
       - name: Fetch submodules
         if: ${{ !steps.jni-cache.outputs.cache-hit }}
         run: |
           git submodule update --init --recursive
-        
+
       - name: Check code style
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: |
           make style-lint
 
-      # `make debug` works not well on Windows
       - name: Build debug Trime
         run: |
           ./gradlew :app:assembleDebug
 
       - name: Add JNI cache
         if: ${{ !steps.jni-cache.outputs.cache-hit }}
-        shell: bash
         run: cp -R app/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib app/prebuilt
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v5
         with:
-          name: trime-${{ matrix.os }}
-          path: app/build/outputs/apk/debug/
-          # keep 90 days
-          retention-days: 90
-
-      - name: Upload APK artifact (ARM64_V8A only)
-        uses: actions/upload-artifact@v5
-        with:
-          name: trime-arm64-v8a-${{ matrix.os }}
+          name: shengyun-rime-arm64-v8a
           path: app/build/outputs/apk/debug/*arm64-v8a-*.apk
-          # keep 90 days
           retention-days: 90
-
-      - name: Upload JNI artifact (librime_jni.so)
-        uses: actions/upload-artifact@v5
-        with:
-          name: librime_jni-${{ matrix.os }}
-          path: app/build/intermediates/merged_native_libs/debug/mergeDebugNativeLibs/out/lib/*
-          # keep 90 days
-          retention-days: 90
-
-  release:
-    needs: build
-    if: github.ref == 'refs/heads/develop'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Download Ubuntu APK artifact
-        uses: actions/download-artifact@v5
-        with:
-          name: trime-arm64-v8a-ubuntu-24.04
-          path: apk
 
       - name: Get current date
         id: date
         run: echo "date=$(date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
 
       - name: Create automatic release
+        if: github.ref == 'refs/heads/develop'
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
@@ -129,4 +90,4 @@ jobs:
           prerelease: true
           title: "Development Build ${{ steps.date.outputs.date }}"
           files: |
-            apk/*.apk
+            app/build/outputs/apk/debug/*arm64-v8a-*.apk
