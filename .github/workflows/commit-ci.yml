@@ -101,8 +101,8 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: "latest"
+          automatic_release_tag: "v${{ steps.version.outputs.date }}"
           prerelease: false
-          title: "Shengyun Rime ${{ steps.version.outputs.date }}"
+          title: "Shengyun Rime v${{ steps.version.outputs.date }}"
           files: |
             app/build/outputs/apk/release/shengyun-rime-arm64-v8a-*.apk
