@@ -26,6 +26,7 @@ object DataManager {
       patch:
         schema_list:
           - schema: shengyun
+          - schema: terra_pinyin
     """
 
     private val lock = ReentrantLock()
