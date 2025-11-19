@@ -38,3 +38,12 @@
 [submodule "essay"]
 	path = app/data/rime/essay
 	url = https://github.com/rime/rime-essay
+[submodule "terra-pinyin"]
+	path = app/data/rime/terra-pinyin
+	url = https://github.com/rime/rime-terra-pinyin
+[submodule "shengyun"]
+	path = app/data/rime/shengyun
+	url = git@github.com:gshmu/shengyun.git
+[submodule "app/data/rime/terra-pinyin"]
+	path = app/data/rime/terra-pinyin
+	url = https://github.com/rime/rime-terra-pinyin
