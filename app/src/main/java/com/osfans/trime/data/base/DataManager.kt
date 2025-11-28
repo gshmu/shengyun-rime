@@ -25,8 +25,8 @@ object DataManager {
     private const val SCHEMA_LIST_CUSTOM_PATCH = """
       patch:
         schema_list:
-          - schema: luna_pinyin
-          - schema: luna_pinyin_simp
+          - schema: shengyun
+          - schema: terra_pinyin
     """
 
     private val lock = ReentrantLock()
@@ -108,6 +108,18 @@ object DataManager {
         val custom = userDataDir.resolve(DEFAULT_CUSTOM_FILE_NAME)
         if (!custom.exists()) {
             if (custom.createNewFile()) {
+                custom.writeText(SCHEMA_LIST_CUSTOM_PATCH.trimIndent())
+            }
+        } else {
+            // Force update if the file doesn't contain shengyun schema
+            runCatching {
+                val currentContent = custom.readText()
+                if (!currentContent.contains("schema: shengyun")) {
+                    Timber.d("Updating default.custom.yaml to include shengyun schema")
+                    custom.writeText(SCHEMA_LIST_CUSTOM_PATCH.trimIndent())
+                }
+            }.onFailure {
+                Timber.e(it, "Failed to update default.custom.yaml, recreating...")
                 custom.writeText(SCHEMA_LIST_CUSTOM_PATCH.trimIndent())
             }
         }

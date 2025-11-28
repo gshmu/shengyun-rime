@@ -26,6 +26,7 @@ data class TextKeyboard(
     val resetAsciiMode: Boolean,
     val labelTransform: LabelTransform,
     val lock: Boolean,
+    val once: Boolean = false,
     val asciiKeyboard: String,
     val landscapeKeyboard: String,
     val landscapeSplitPercent: Int,

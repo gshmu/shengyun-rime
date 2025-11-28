@@ -79,7 +79,13 @@ class KeyboardWindow(
     private var currentKeyboardId = ""
     private var lastKeyboardId = ""
     private var lastLockKeyboardId = ""
+
+    // ← 新增：once 模式状态管理
+    private var onceKeyboardId = ""          // 当前是否是 once 键盘
+    private var previousKeyboardId = ""      // 要返回的上一键盘
+
     private val cachedKeyboards = mutableMapOf<String, Pair<Keyboard, KeyboardView>>()
+
     private val currentKeyboard: Keyboard? get() = cachedKeyboards[currentKeyboardId]?.first
     private val currentKeyboardView: KeyboardView? get() = cachedKeyboards[currentKeyboardId]?.second
 
@@ -111,21 +117,36 @@ class KeyboardWindow(
     private fun attachKeyboard(target: String) {
         currentKeyboardId = target
         lastKeyboardId = target
-        val newConfig = selectKeyboardConfig(target)
-        val newKeyboard =
-            (currentKeyboard ?: Keyboard(theme, newConfig)).also {
-                runBlocking {
-                    _currentKeyboardHeight.emit(it.keyboardHeight)
-                }
-                if (it.isLock) lastLockKeyboardId = target
-                dispatchCapsState(it::setShifted)
-                val isAsciiMode = rime.run { statusCached }.isAsciiMode
-                if (isAsciiMode != it.asciiMode) {
-                    service.postRimeJob { setRuntimeOption("ascii_mode", it.asciiMode) }
-                }
-                // TODO：为避免过量重构，这里暂时将 currentKeyboard 同步到 KeyboardSwitcher
-                KeyboardSwitcher.currentKeyboard = it
+
+        // Check if it's a dynamic Shengyun keyboard
+        val newKeyboard = if (target.startsWith("shengyun_finals_")) {
+            val initial = target.removePrefix("shengyun_finals_")
+            ShengyunKeyboardGenerator(context, theme).generateKeyboard(initial)
+        } else {
+            val newConfig = selectKeyboardConfig(target)
+            currentKeyboard ?: Keyboard(theme, newConfig)
+        }
+
+        newKeyboard.also {
+            runBlocking {
+                _currentKeyboardHeight.emit(it.keyboardHeight)
             }
+            if (it.isLock) lastLockKeyboardId = target
+
+            // ← 新增：如果新键盘是 once 模式，记录返回目标
+            if (it.isOnce) {
+                onceKeyboardId = target
+                previousKeyboardId = lastKeyboardId  // 返回上一键盘
+            }
+
+            dispatchCapsState(it::setShifted)
+            val isAsciiMode = rime.run { statusCached }.isAsciiMode
+            if (isAsciiMode != it.asciiMode) {
+                service.postRimeJob { setRuntimeOption("ascii_mode", it.asciiMode) }
+            }
+            // TODO：为避免过量重构，这里暂时将 currentKeyboard 同步到 KeyboardSwitcher
+            KeyboardSwitcher.currentKeyboard = it
+        }
         val newView =
             currentKeyboardView ?: KeyboardView(context, theme, newKeyboard, popupComponent, service).also {
                 cachedKeyboards[target] = newKeyboard to it
@@ -315,6 +336,21 @@ class KeyboardWindow(
         currentKeyboardView?.let {
             it.onDetach()
             it.keyboardActionListener = null
+        }
+    }
+
+    /**
+     * 当用户点击按键后调用。
+     * 如果是 once 键盘，自动切回上一键盘。
+     */
+    fun onKeyPressedInOnceKeyboard() {
+        if (onceKeyboardId.isNotEmpty() && onceKeyboardId == currentKeyboardId) {
+            if (previousKeyboardId.isNotEmpty()) {
+                switchKeyboard(previousKeyboardId)
+                // 重置状态
+                onceKeyboardId = ""
+                previousKeyboardId = ""
+            }
         }
     }
 }

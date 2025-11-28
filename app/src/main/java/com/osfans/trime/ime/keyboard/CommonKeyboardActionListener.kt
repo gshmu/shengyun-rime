@@ -347,6 +347,9 @@ class CommonKeyboardActionListener(
                     }
                     shouldReleaseKey = false
                 }
+
+                // ← 新增：通知 KeyboardWindow 可能有按键点击，触发 once 键盘自动返回
+                keyboardWindow.onKeyPressedInOnceKeyboard()
             }
 
             override fun onText(text: String) {

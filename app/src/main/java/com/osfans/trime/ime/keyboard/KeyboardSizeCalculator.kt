@@ -122,6 +122,8 @@ class KeyboardSizeCalculator(
             if (finalAutoHeightIndex < 0) finalAutoHeightIndex = 0
         } else if (autoHeightIndex >= rawHeight.size) {
             finalAutoHeightIndex = rawHeight.size - 1
+        } else {
+            finalAutoHeightIndex = autoHeightIndex
         }
 
         val newHeight = rawHeight.toMutableList()

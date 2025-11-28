@@ -137,6 +137,7 @@ class Keyboard(
     private val proximityThreshold: Int =
         (keyWidth * SEARCH_DISTANCE).pow(2).toInt() // Square it for comparison
     val isLock = selfConfig?.lock ?: false // 切換程序時記憶鍵盤
+    val isOnce = selfConfig?.once ?: false // 單次使用後自動返回
     val asciiKeyboard: String? = selfConfig?.asciiKeyboard // 英文鍵盤
 
     // todo 把按下按键弹出的内容改为单独设计的view，而不是keyboard

@@ -1,158 +1,201 @@
 <!--
-SPDX-FileCopyrightText: 2015 - 2024 Rime community
+SPDX-FileCopyrightText: 2015 - 2025 Rime community
+SPDX-FileCopyrightText: 2025 Shengyun IME
 
 SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
-# 同文 Android 輸入法平臺
+# 聲韻輸入法 Shengyun IME
 
-![build](https://github.com/osfans/trime/actions/workflows/commit-ci.yml/badge.svg?branch=develop)
+> 專為學拼音的孩子設計的聲韻分層拼音輸入法
+> 基於 [Trime](https://github.com/osfans/trime) (Android RIME 輸入法) 和 [聲韻方案](https://github.com/gshmu/shengyun) 構建
+
+![build](https://github.com/gshmu/shengyun-rime/actions/workflows/commit-ci.yml/badge.svg?branch=develop)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![GitHub release](https://img.shields.io/github/release/osfans/trime.svg)](https://github.com/osfans/trime/releases)
-[![F-Droid release](https://img.shields.io/f-droid/v/com.osfans.trime.svg)](https://f-droid.org/packages/com.osfans.trime)
-[![Latest build](https://img.shields.io/github/last-commit/osfans/trime.svg)](http://osfans.github.io/trime/)
+[![GitHub release](https://img.shields.io/github/release/gshmu/shengyun-rime.svg)](https://github.com/gshmu/shengyun-rime/releases)
 
 [English](README.md) | [简体中文](README_sc.md) | 繁體中文
 
-## 關於
+---
 
-源於開源的[注音倉頡輸入法]前端，基於著名的 [RIME] 輸入法框架，使用 JNI 的 C 語言和 Android 的 Java/Kotlin 語言書寫，旨在保護漢語各地方言母語，音碼、形碼通用的輸入法平臺。
+## 📖 關於聲韻輸入法
 
-[查看文檔](https://github.com/osfans/trime/wiki)
+聲韻拼音是一種創新的漢字輸入方法，將每個漢字的拼音分為**聲母**和**韻母**兩層鍵盤，通過**兩次點擊**即可完成一個完整拼音的輸入。
 
-## 下載
+> **說明**：這是一個**預配置聲韻方案的 Trime 構建版本**。聲韻輸入方案本身在獨立倉庫維護：[github.com/gshmu/shengyun](https://github.com/gshmu/shengyun)
 
-- 穩定版 <br>
-  [<img alt='Get it on F-Droid' src='https://fdroid.gitlab.io/artwork/badge/get-it-on.png' height='80px'/>](https://f-droid.org/packages/com.osfans.trime)
-  [<img alt='Google Play 立即下載' src='https://play.google.com/intl/en_us/badges/images/generic/zh-tw_badge_web_generic.png' height='80px'/>](https://play.google.com/store/apps/details?id=com.osfans.trime)
+### ✨ 核心特性
 
-- 每夜版 [點選下載](https://github.com/osfans/trime/releases/tag/nightly)
+- ✅ **符合拼音規範**：嚴格遵循漢語拼音聲韻規則
+- ✅ **兩步輸入**：聲母 + 韻母，高效快捷
+- ✅ **支持聲調提示**：鍵盤頂行顯示聲調符號 ˉˊˇˋ，幫助學習拼音
+- ✅ **兒童友好**：大按鍵、清晰配色、純拼音界面
+- ✅ **專業詞庫**：基於 [terra_pinyin](https://github.com/rime/rime-terra-pinyin) 180萬詞條
+- ✅ **開源免費**：基於 RIME 引擎和 Trime 平台
 
-- 測試版 [點選下載](https://github.com/osfans/trime/actions)
+### 🎯 設計理念
 
-- 配置文件 [rimerc](https://github.com/Bambooin/rimerc)
+**為什麼要做分層輸入？**
 
-## 沿革
+傳統的全鍵盤 QWERTY 拼音鍵盤對學齡前兒童來說過於複雜，按鍵太多、記憶負擔重。聲韻將拼音分為：
 
-TRIME 是 Tongwen RIME 或是 ThaeRvInputMEthod 的縮寫:
+1. **第一步**：選擇聲母 (b/p/m/f/d/t/n/l/g/k/h/j/q/x/zh/ch/sh/r/z/c/s/y/w)
+2. **第二步**：選擇韻母 (a/o/e/i/u/ü 及其組合)
 
-- 最初，輸入法是寫給[泰如拼音](http://taerv.nguyoeh.com/ime/)（tae5 rv2）的，中文名為“泰如輸入法”;
-- 然後，添加了吳語等方言碼錶，做成了一個輸入法平臺，更名為“漢字方言輸入法”;
-- 後來，相容了五筆、兩筆等形碼，在太空衛士、徵羽的建議下，更名為“[同文輸入法平臺 2.x](https://github.com/osfans/trime-legacy)”。寓意音碼形碼同臺，方言官話同文。
-- 之後，藉助 JNI 技術，享受了 [librime](https://github.com/rime/librime) 的成果，升級為“同文輸入法平臺 3.x”，簡稱“同文輸入法”。
+這種分層設計幫助兒童：
+- 專注於拼音的基本結構
+- 減少鍵盤按鍵數量
+- 強化聲韻組合規律的認知
 
-現在歡迎你前來[貢獻](CONTRIBUTING.md) ～！
+---
 
-## 開發入門
+## 📥 安裝方法
 
-### 準備
+### 方式一：直接安裝 APK（推薦）
 
-#### 開發環境要求
+訪問 [Releases 頁面](https://github.com/gshmu/shengyun-rime/releases) 下載最新的 APK 文件並安裝。
+
+聲韻輸入法已預配置，安裝後即可使用。
+
+---
+
+## 📚 技術架構
+
+本項目基於以下開源組件構建：
+
+- **[RIME](https://rime.im)**：跨平台輸入法引擎
+- **[Trime](https://github.com/osfans/trime)**：Android 平台 RIME 前端
+- **[terra_pinyin](https://github.com/rime/rime-terra-pinyin)**：地球拼音詞庫（180萬詞）
+- **[聲韻方案](https://github.com/gshmu/shengyun)**：聲韻分層配置文件
+
+### 配置文件說明
+
+```
+app/src/main/assets/shared/
+├── shengyun.schema.yaml        # 聲韻輸入方案配置
+├── shengyun.trime.yaml         # 鍵盤佈局配置（3750行）
+├── terra_pinyin.dict.yaml      # 地球拼音詞庫（180萬詞）
+├── terra_pinyin.schema.yaml    # 地球拼音方案
+├── default.custom.yaml         # 默認啟用聲韻方案
+└── stroke.schema.yaml          # 筆畫輔助輸入
+```
+
+---
+
+## 🛠️ 開發者指南
+
+### 環境要求
 
 - Android SDK 和 Android NDK
-  - 如果還不熟悉 Android 開發，建議安裝 [Android Studio](https://developer.android.com/studio)，它會自動安裝並配置 Android 開發環境。
+- JDK (OpenJDK) 17
+- Python 3（OpenCC 字典生成）
+- Git（包括子模組支持）
 
-- JDK（OpenJDK）17
-- Python 3 (用於給 OpenCC 生成詞典文字檔案)
-
-#### Windows 上的前提條件
-
-當前構建配置會使構建過程中建立符號連結，開發者需要：
-
-- 啟用[開發者模式](https://learn.microsoft.com/zh-cn/windows/apps/get-started/enable-your-device-for-development) 以在無管理員許可權的情況下建立符號連結。
-
-- 啟用 `git` 的符號連結支援：
-
-  ```powershell
-  git config --global core.symlinks true
-  ```
-
-如果無法或者不想啟用上述設定也沒關係。構建系統會自動在符號連結建立失敗時使用複製代替。
-
-### 構建
-
-#### 1. 克隆此專案並拉取所有子模組。
+### 克隆項目
 
 ```sh
-git clone git@github.com:osfans/trime.git
-git submodule update --init --recursive
-# 可以使用部分克隆節省時間
+git clone git@github.com:gshmu/shengyun-rime.git
+cd shengyun-rime
 git submodule update --init --recursive --filter=blob:none
 ```
 
-#### 2. 編譯除錯版本:
+### 編譯項目
+
+#### Debug 版本（無簽名）
 
 ```sh
-# On Linux or macOS
+# Linux/macOS
 make debug
 
-# On Windows
+# Windows
 .\gradlew assembleDebug
 ```
 
-#### 3. 編譯正式版本：
+#### Release 版本（需簽名）
 
-請建立 `keystore.properties` 檔案，包含以下內容，註明[簽名信息](https://developer.android.com/studio/publish/app-signing.html)：
+1. 創建 `keystore.properties` 文件：
 
-```gradle.properties
+```properties
 storePassword=myStorePassword
 keyPassword=mykeyPassword
 keyAlias=myKeyAlias
 storeFile=myStoreFileLocation
 ```
 
-然後執行：
+2. 編譯：
 
 ```sh
-# On Linux or macOS
+# Linux/macOS
 make release
 
-# On Windows
+# Windows
 .\gradlew assembleRelease
 ```
 
-### 故障排除
+### 更新配置文件
 
-```
-Target "boost_log_setup" links to target "Boost::coroutine" but the target was not found.
-```
+聲韻方案配置位於 `app/src/main/assets/shared/`，修改後需要：
 
-在 Linux 或 macOS 上執行 `make clean`，Windows 上執行 `.\gradlew clean`。
+1. 重新編譯 APK
+2. 或通過 Trime 的重新部署功能加載（僅配置文件變更）
 
-其他問題:
+---
 
-1. 首先嚐試 `make clean`
-2. 確保你的倉庫與最新版本一致。如果你修改了一個或更多的子模組，請確保它們與當前倉庫版本相容。
-3. 如果問題依然存在（不太可能）, 嘗試進行一次新的克隆。
-4. 檢查是否有 PR/issue 與你的問題相關。 如果有的話，嘗試他們的解決方案。
-5. 如果以上方法都不工作，你可以提一個 issue 來尋求幫助(可選)。
+## 📝 版本歷史
 
-## 鳴謝
+### v1.0.2 (2025-11-18)
+- ✅ 移除 Luna Pinyin，減少 APK 體積（~920KB）
+- ✅ 更新到最新聲韻配置（3750行鍵盤佈局）
+- ✅ 優化 terra_pinyin 依賴
 
-- 開發：[osfans](https://github.com/osfans)
-- 貢獻：[boboIqiqi](https://github.com/boboIqiqi)、[Bambooin](https://github.com/Bambooin)、[senchi96](https://github.com/senchi96)、[heiher](https://github.com/heiher)、[abay](https://github.com/a342191555)、[iovxw](https://github.com/iovxw)、[huyz-git](https://github.com/huyz-git)、[tumuyan](https://github.com/tumuyan)、[WhiredPlanck](https://github.com/WhiredPlanck)、[nopdan](https://github.com/nopdan)......
-- [維基](https://github.com/osfans/trime/wiki)：[xiaoqun2016](https://github.com/xiaoqun2016)、[boboIqiqi](https://github.com/boboIqiqi)......
-- 翻譯：天真可愛的滿滿（繁體中文）、點解（英文）......
-- 鍵盤：天真可愛的滿滿、皛筱曉小笨魚、吳琛 11、熊貓阿 Bo、默默ㄇㄛ ˋ......
-- 捐贈：[Releases](https://github.com/osfans/trime/releases) 中的“打賞”實時更新
-- 社群：在 [Issues](https://github.com/osfans/trime/issues)、[QQ 群 (811142286)](https://jq.qq.com/?_wv=1027&k=AXdR80HN)、[QQ 群 (224230445)](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=pg_q7UVumWYLq1Rk8kIAqkK1xGt64VnX&authKey=04m9l7OBO5H5vgrEL8IbpsmtnptWM60xy%2FUwYCfyvw9VcRhe8zRzAS1ezoemZdFr&noverify=0&group_code=224230445)、[貼吧](http://tieba.baidu.com/f?kw=rime)、[Google Play](https://play.google.com/store/apps/details?id=com.osfans.trime)、[Telegram](https://t.me/trime_dev) 中反饋意見的網友
-- 專案：[RIME]、[OpenCC]、[注音倉頡輸入法]等開源專案
+### v1.0.1 (2025-11-17)
+- ✅ 集成聲韻輸入方案
+- ✅ 添加 terra_pinyin 支持
+- ✅ 兒童友好鍵盤佈局
 
-## 第三方庫
+### v1.0.0 (2025-11-14)
+- 🎉 首個發佈版本
+- ✅ 基於 Trime 3.x
+- ✅ 聲韻分層輸入實現
 
-- [Boost C++ Libraries](https://www.boost.org/) (Boost Software License)
-- [darts-clone](https://github.com/s-yata/darts-clone) (New BSD License)
-- [LevelDB](https://github.com/google/leveldb) (New BSD License)
-- [libiconv](https://www.gnu.org/software/libiconv/) (LGPL License)
-- [marisa-trie](https://github.com/s-yata/marisa-trie) (BSD License)
-- [glog](https://github.com/google/glog) (New BSD License)
-- [OpenCC](https://github.com/BYVoid/OpenCC) (Apache License 2.0)
-- [RIME](https://rime.im) (BSD License)
-- [snappy](https://github.com/google/snappy)(BSD License)
-- [utfcpp](https://github.com/nemtrif/utfcpp) (Boost Software License)
-- [yaml-cpp](https://github.com/jbeder/yaml-cpp) (MIT License)
-- [注音倉頡輸入法](https://code.google.com/p/android-traditional-chinese-ime/) (Apache License 2.0)
+---
 
-[注音倉頡輸入法]: https://code.google.com/p/android-traditional-chinese-ime/
-[RIME]: http://rime.im
-[OpenCC]: https://github.com/BYVoid/OpenCC
+## 🙏 致謝
+
+### 聲韻輸入法
+
+- 作者：[gshmu](https://github.com/gshmu)
+- 靈感來源：為女兒學習拼音而設計
+
+### Trime 輸入法
+
+- 開發者：[osfans](https://github.com/osfans)
+- 貢獻者：[boboIqiqi](https://github.com/boboIqiqi)、[Bambooin](https://github.com/Bambooin)、[WhiredPlanck](https://github.com/WhiredPlanck) 等
+- 社群：[Trime Wiki](https://github.com/osfans/trime/wiki)、[QQ群](https://jq.qq.com/?_wv=1027&k=AXdR80HN)、[Telegram](https://t.me/trime_dev)
+
+### 開源項目
+
+- [RIME](https://rime.im)：佛振開發的跨平台輸入法引擎
+- [OpenCC](https://github.com/BYVoid/OpenCC)：繁簡轉換庫
+- [terra_pinyin](https://github.com/rime/rime-terra-pinyin)：地球拼音詞庫
+
+---
+
+## 📄 開源許可
+
+本項目採用 [GPL-3.0-or-later](https://www.gnu.org/licenses/gpl-3.0) 許可證。
+
+聲韻輸入方案配置文件同樣採用 GPL-3.0 許可。
+
+---
+
+## 🔗 相關鏈接
+
+- 🏠 聲韻方案倉庫：[github.com/gshmu/shengyun](https://github.com/gshmu/shengyun)
+- 📱 Trime 輸入法：[github.com/osfans/trime](https://github.com/osfans/trime)
+- 🔤 RIME 輸入法：[rime.im](https://rime.im)
+- 📖 拼音規則參考：[pinyin.info](https://pinyin.info/rules/initials_finals.html)
+
+---
+
+**聲韻輸入法** · 讓學拼音變得簡單 · GPL-3.0 License
