@@ -177,7 +177,7 @@ class ShengyunKeyboardGenerator(
             horizontalGap = 0,
             verticalGap = 0,
             roundCorner = 0f,
-            columns = 0,
+            columns = -1,
             asciiMode = false,
             resetAsciiMode = false,
             labelTransform = TextKeyboard.LabelTransform.NONE,
@@ -243,7 +243,7 @@ class ShengyunKeyboardGenerator(
             hlKeyBackColor = "",
             hlKeySymbolColor = "",
             popup = emptyList(),
-            behaviors = emptyMap<KeyBehavior, String>()
+            behaviors = mapOf(KeyBehavior.CLICK to click)
         )
     }
 
@@ -274,7 +274,7 @@ class ShengyunKeyboardGenerator(
             hlKeyBackColor = "",
             hlKeySymbolColor = "",
             popup = emptyList(),
-            behaviors = emptyMap<KeyBehavior, String>()
+            behaviors = emptyMap()
         )
     }
 
@@ -310,7 +310,7 @@ class ShengyunKeyboardGenerator(
             hlKeyBackColor = "",
             hlKeySymbolColor = "",
             popup = emptyList(),
-            behaviors = emptyMap<KeyBehavior, String>()
+            behaviors = mapOf(KeyBehavior.CLICK to click)
         )
     }
 }
