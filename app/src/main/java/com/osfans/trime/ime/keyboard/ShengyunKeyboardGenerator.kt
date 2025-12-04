@@ -132,11 +132,14 @@ class ShengyunKeyboardGenerator(
         val template = layoutTemplate ?: return Keyboard(theme, null) // Return empty if failed to load
 
         // 基于布局模板生成按键
-        template.layout.forEach { row ->
-            row.forEach { slot ->
+        template.layout.forEachIndexed { rowIndex, row ->
+            row.forEachIndexed { colIndex, slot ->
                 val key = when (slot) {
                     is String -> {
-                        if (template.functionKeys.containsKey(slot)) {
+                        if (rowIndex == 0 && colIndex == 0 && initial != "zero") {
+                            // Special handling for top-left key: show initial and switch back
+                            createInitialLabelKey(initial)
+                        } else if (template.functionKeys.containsKey(slot)) {
                             createFunctionKey(slot, template.functionKeys[slot]!!)
                         } else if (slot.isEmpty()) {
                             createEmptyKey()
@@ -206,7 +209,7 @@ class ShengyunKeyboardGenerator(
         val width = (config["width"] as? Number)?.toFloat() ?: 12.5f
         
         val click = when (name) {
-            "⇧" -> "Keyboard_shengyun_initials"
+            "⇧" -> "{command: keyboard, option: shengyun_initials}"
             "␣" -> "space"
             "⌫" -> "BackSpace"
             else -> config["action"] as? String ?: name
@@ -278,11 +281,44 @@ class ShengyunKeyboardGenerator(
         )
     }
 
+    private fun createInitialLabelKey(initial: String): TextKey {
+        val click = "{command: keyboard, option: shengyun_initials}"
+        return TextKey(
+            width = 12.5f,
+            height = 0f,
+            roundCorner = 0f,
+            label = initial,
+            labelSymbol = "",
+            hint = "",
+            click = click,
+            sendBindings = true,
+            keyTextSize = 0f,
+            symbolTextSize = 0f,
+            keyTextOffsetX = 0f,
+            keyTextOffsetY = 0f,
+            keySymbolOffsetX = 0f,
+            keySymbolOffsetY = 0f,
+            keyHintOffsetX = 0f,
+            keyHintOffsetY = 0f,
+            keyPressOffsetX = 0,
+            keyPressOffsetY = 0,
+            keyTextColor = "",
+            keyBackColor = "",
+            keySymbolColor = "",
+            hlKeyTextColor = "",
+            hlKeyBackColor = "",
+            hlKeySymbolColor = "",
+            popup = emptyList(),
+            behaviors = mapOf(KeyBehavior.CLICK to click)
+        )
+    }
+
     private fun createFinalKey(
         final: String,
         initial: String
     ): TextKey {
-        val click = if (initial == "zero") final else initial + final
+        val pinyin = if (initial == "zero") final else initial + final
+        val click = "{commit: $pinyin, command: keyboard, option: shengyun_initials}"
         
         return TextKey(
             width = 12.5f,
