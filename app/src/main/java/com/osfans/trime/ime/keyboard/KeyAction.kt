@@ -179,6 +179,11 @@ class KeyAction(
                     commit = it["commit"] ?: ""
                     text = it["text"] ?: ""
                     label = it["label"] ?: ""
+                    command = it["command"] ?: ""
+                    option = it["option"] ?: ""
+                    if (command.isNotEmpty()) {
+                        code = KeyEvent.KEYCODE_FUNCTION
+                    }
                 }
             }
             else -> {
