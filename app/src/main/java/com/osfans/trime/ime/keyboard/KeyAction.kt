@@ -218,7 +218,12 @@ class KeyAction(
             .removeSurrounding("{", "}")
             .split(", ")
             .mapNotNull {
-                it.split("=").takeIf { it.size == 2 }?.let { (key, value) -> key to value }
+                val parts = it.split(Regex("[:=]"), 2)
+                if (parts.size == 2) {
+                    parts[0].trim() to parts[1].trim()
+                } else {
+                    null
+                }
             }.toMap()
 
         fun getModifierKeyOnMask(keycode: Int): Int = when (keycode) {
