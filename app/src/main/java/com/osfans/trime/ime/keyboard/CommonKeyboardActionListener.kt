@@ -152,6 +152,7 @@ class CommonKeyboardActionListener(
                 val shouldHandle = when {
                     action.commit.isNotEmpty() -> {
                         service.commitText(action.commit, true)
+                        keyboardWindow.onKeyPressedInOnceKeyboard()
                         false
                     }
                     KeyboardSwitcher.currentKeyboard.let { keyboard ->

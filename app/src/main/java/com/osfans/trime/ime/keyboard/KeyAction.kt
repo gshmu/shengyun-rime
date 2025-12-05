@@ -181,8 +181,11 @@ class KeyAction(
                     label = it["label"] ?: ""
                     command = it["command"] ?: ""
                     option = it["option"] ?: ""
+                    select = it["select"] ?: ""
                     if (command.isNotEmpty()) {
                         code = KeyEvent.KEYCODE_FUNCTION
+                    } else if (select.isNotEmpty()) {
+                        code = KeyEvent.KEYCODE_EISU
                     }
                 }
             }

@@ -209,7 +209,7 @@ class ShengyunKeyboardGenerator(
         val width = (config["width"] as? Number)?.toFloat() ?: 12.5f
         
         val click = when (name) {
-            "⇧" -> "{command: keyboard, option: shengyun_initials}"
+            "⇧" -> "{select: shengyun_initials}"
             "␣" -> "space"
             "⌫" -> "BackSpace"
             else -> config["action"] as? String ?: name
@@ -282,7 +282,7 @@ class ShengyunKeyboardGenerator(
     }
 
     private fun createInitialLabelKey(initial: String): TextKey {
-        val click = "{command: keyboard, option: shengyun_initials}"
+        val click = "{select: shengyun_initials}"
         return TextKey(
             width = 12.5f,
             height = 0f,
@@ -318,7 +318,7 @@ class ShengyunKeyboardGenerator(
         initial: String
     ): TextKey {
         val pinyin = if (initial == "zero") final else initial + final
-        val click = "{commit: $pinyin, command: keyboard, option: shengyun_initials}"
+        val click = "{commit: $pinyin}"
         
         return TextKey(
             width = 12.5f,
